@@ -231,6 +231,10 @@ def readNerfSyntheticInfo(path, white_background, eval, extension=".png"):
     nerf_normalization = getNerfppNorm(train_cam_infos)
 
     ply_path = os.path.join(path, "points3d.ply")
+    if os.path.exists(ply_path):
+        print(f"Found point3d.ply at {ply_path}")
+    else:
+        print(f"not found point3d.ply at {ply_path}...")
     if not os.path.exists(ply_path):
         # Since this data set has no colmap data, we start with random points
         num_pts = 100_000

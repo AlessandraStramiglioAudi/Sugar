@@ -343,8 +343,12 @@ def extract_mesh_from_coarse_sugar(args):
                     fg_bbox_max_tensor = torch.tensor(fg_bbox_max).to(sugar.device)
                 else:
                     CONSOLE.print("Using default, camera based bounding box.")
+                    #ALE
                     fg_bbox_min_tensor = - fg_bbox_factor * sugar.get_cameras_spatial_extent() * torch.ones(1, 3, device=sugar.device)
                     fg_bbox_max_tensor = fg_bbox_factor * sugar.get_cameras_spatial_extent() * torch.ones(1, 3, device=sugar.device)
+                    #fg_bbox_min_tensor = surface_points.min(dim=0, keepdim=True)[0] * fg_bbox_factor
+                    #fg_bbox_max_tensor = surface_points.max(dim=0, keepdim=True)[0] * fg_bbox_factor
+
                     
                 if center_bbox:
                     _cameras_spatial_extent, _camera_average_xyz = sugar.get_cameras_spatial_extent(return_average_xyz=True)

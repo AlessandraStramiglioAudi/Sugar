@@ -11,7 +11,6 @@ from pytorch3d.renderer.cameras import _get_sfm_calibration_matrix
 from sugar_utils.graphics_utils import focal2fov, fov2focal, getWorld2View2, getProjectionMatrix
 from sugar_utils.general_utils import PILtoTorch
 
-
 def load_gs_cameras(source_path, gs_output_path, image_resolution=1, 
                     load_gt_images=True, max_img_size=1920, white_background=False,
                     remove_indices=[]):
@@ -29,9 +28,9 @@ def load_gs_cameras(source_path, gs_output_path, image_resolution=1,
     Returns:
         List of GSCameras: List of Gaussian Splatting cameras.
     """
-    image_dir = os.path.join(source_path, 'images')
+    image_dir = os.path.join(source_path, 'image') #ALE it was images
     
-    with open(gs_output_path + 'cameras.json') as f:
+    with open(gs_output_path + 'cameras.json') as f: 
         unsorted_camera_transforms = json.load(f)
         
     # Remove indices
@@ -69,20 +68,27 @@ def load_gs_cameras(source_path, gs_output_path, image_resolution=1,
         print(f"Found image extension {extension}")
     
     for cam_idx in range(len(camera_transforms)):
-        camera_transform = camera_transforms[cam_idx]
-        
-        # Extrinsics
+        camera_transform = camera_transforms[cam_idx]  
+        ### --- original ---
+        #Extrinsics
         rot = np.array(camera_transform['rotation'])
         pos = np.array(camera_transform['position'])
-        
+        #Previous
         W2C = np.zeros((4,4))
         W2C[:3, :3] = rot
         W2C[:3, 3] = pos
         W2C[3,3] = 1
         
-        Rt = np.linalg.inv(W2C)
+        Rt = np.linalg.inv(W2C) 
         T = Rt[:3, 3]
         R = Rt[:3, :3].transpose()
+
+        ## Working with gsSplatter blender initialization
+        # c2w = np.array(camera_transform['transform_matrix'], dtype=np.float64)
+        # c2w[:3, 1:3] *= -1.0
+        # w2c = np.linalg.inv(c2w)
+        # R = w2c[:3, :3].T  #w2c[:3, :3].T 
+        # T = w2c[:3, 3]   #w2c[:3, 3] 
         
         # Intrinsics
         width = camera_transform['width']

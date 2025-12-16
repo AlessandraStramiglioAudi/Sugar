@@ -118,6 +118,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
 
                 if iteration > opt.densify_from_iter and iteration % opt.densification_interval == 0:
                     size_threshold = 20 if iteration > opt.opacity_reset_interval else None
+                    print(f"[gaussian_splatting/train.py] permoring densify and prune at iteration: {iteration}")
                     gaussians.densify_and_prune(opt.densify_grad_threshold, 0.005, scene.cameras_extent, size_threshold)
                 
                 if iteration % opt.opacity_reset_interval == 0 or (dataset.white_background and iteration == opt.densify_from_iter):
@@ -149,6 +150,7 @@ def prepare_output_and_logger(args):
     # Create Tensorboard writer
     tb_writer = None
     if TENSORBOARD_FOUND:
+        print("[gaussian_splatting/train.py#prepare_output_logger] Tensorboard found: logging progress")
         tb_writer = SummaryWriter(args.model_path)
     else:
         print("Tensorboard not available: not logging progress")

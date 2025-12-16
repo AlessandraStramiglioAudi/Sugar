@@ -115,6 +115,8 @@ if __name__ == "__main__":
         else:
             gs_checkpoint_dir = os.path.join("output", "vanilla_gs", args.scene_path.split(sep)[-2])
         gs_checkpoint_dir = gs_checkpoint_dir + sep
+        abs_path = os.path.abspath(gs_checkpoint_dir)
+        print(f"Created checkpoint dir at {abs_path}")
 
         # Trains a 3DGS scene for 7k iterations
         white_background_str = '-w ' if args.white_background else ''
