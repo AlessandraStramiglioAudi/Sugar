@@ -35,11 +35,28 @@ def read_ids(path: str):
             yield uid
 
 def main(num_workers: int = MAX_WORKERS, start_idx: int = 0):
-    all_uids = list(read_ids(UID_FILE))
-    print(f"Loaded {len(all_uids)} UIDs")
-
-    all_uids = all_uids[start_idx:]
-    # print("Using batch:", batch_uids)
+    if uid_file:
+        all_uids = list(read_ids(uid_file))
+        print(f"Loaded {len(all_uids)} UIDs from {uid_file}")
+    else:
+        # Get all subdirectories in OBJ_ROOT
+        all_uids = [d for d in os.listdir(OBJ_ROOT)
+                    if os.path.isdir(os.path.join(OBJ_ROOT, d))]
+        print(f"Found {len(all_uids)} folders in {OBJ_ROOT}")
+    
+    # Filter out UIDs that already exist in output folder
+    print(output_base)
+    if output_base and os.path.exists(output_base):
+        existing_uids = set(os.listdir(output_base))
+        original_count = len(all_uids)
+        all_uids = [uid for uid in all_uids if uid not in existing_uids]
+        print(f"Filtered out {original_count - len(all_uids)} already processed scenes")
+    
+    sample_size = min(2000, len(all_uids))
+    sampled_uids = random.sample(all_uids, sample_size)
+    all_uids = sampled_uids
+  
+    print(f"Processing {len(all_uids)} scenes (offset={offset}, limit={limit})")
 
     scene_paths = []
     for uid in all_uids:
