@@ -1,5 +1,9 @@
 <div align="center">
 
+## How to run on multiple scenes
+train full sugar   /leonardo_work/IscrC_GEN-X3D/MeshAnything/SuGaR/train_all_objaverse.py
+ 
+-------------------------------------------------------
 # SuGaR: Surface-Aligned Gaussian Splatting for Efficient 3D Mesh Reconstruction and High-Quality Mesh Rendering
 
 <font size="4">
